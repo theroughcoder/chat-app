@@ -1,0 +1,167 @@
+.App {
+  text-align: center;
+}
+.small-container{
+  max-width: 600px;
+}
+.homeScreen {
+/* height: 94vh; */
+  /* border: 1px solid; */
+}
+.heading {
+  color: rgb(18, 18, 18);
+  margin-top: 150px;
+  font-size: 70px;
+  /* font-family: 'Barlow Semi Condensed', sans-serif; */
+  /* font-family: 'Courgette', cursive; */
+  font-family: 'Parisienne', cursive;
+}
+.home-btn{
+  min-width: 250px;
+  height:3.2em ;
+  font-size: 1.2em;
+  font-weight: 400;
+  margin: 2ch;
+   font-family: 'Barlow Semi Condensed', sans-serif;
+}
+.list-header{
+  height: 8ch;
+  width: 100vw;
+  background-color: black;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  
+}
+.list-footer{
+  height: 6.5ch;
+  width: 100vw;
+  background-color: black;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+ padding: 10px;
+}
+.list-footer Form{
+  margin: auto;
+}
+
+
+.user{
+  color: aliceblue;
+  height: 6ch;
+  border-radius: 1ch;
+  margin: 1ch;
+}
+.name{
+  margin-left: 10px;
+  margin-top: 6px;
+  font-size: 15px;
+  /* border: 2px solid; */
+  /* width: 100px; */
+
+}
+.friend-info{
+  width: 30ch;
+    /* border: 2px solid; */
+
+}
+.friend{
+  height: 7ch;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(179, 175, 175);
+  border-radius: 1ch;
+  margin: 1ch 0;
+}
+.friend-name{
+  margin-left: 10px;
+  margin-top: 6px;
+  font-size: 18px;
+  color: rgb(132, 130, 127);
+
+  /* border: 2px solid; */
+  /* width: 100px; */
+
+}
+.dp{
+  margin-top: 8px;
+  height: 5ch;
+  width: 5ch;
+ border-radius: 100px;
+  border: 1px solid  ;
+}
+
+.profile{
+  font-size: 35px;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+.status{
+  
+  margin-top: 20px;
+  height: 1.2ch;
+  width: 1.2ch;
+  border-radius: 100px;
+  /* border: .5px solid  ; */
+  background-color: rgb(244, 10, 10);
+}
+.profile-img{
+  margin-top: 3px;
+  height: 30ch;
+  width: 30ch;
+ border-radius: 150px;
+ margin:auto;
+  border: 2px solid ;
+  background-color: rgb(185, 227, 228);
+} 
+.chat-container{
+  padding: 1ch;
+height: calc(100vh - 14.5ch);
+/* border: 2px solid green; */
+  overflow: auto;
+  scrollbar-width: none;  /* Firefox */
+}
+.chat-container::-webkit-scrollbar {
+  display: none;
+}
+
+.msg-write{
+  margin-top: 10px;
+}
+.msg{
+  text-align: left;
+  font-size: 1;
+  margin-bottom: 10px;
+  /* border: 2px solid; */
+  overflow: auto;
+}
+.msg-right{
+  float: right;
+  padding: 5px 10px;
+  border-radius: 10px;
+  background-color: black;
+  color: azure;
+  
+}
+.msg-left{
+  float: left;
+  padding: 5px 10px;
+  border-radius: 10px;
+  background-color: azure;
+}
+.findFriendIcon{
+  bottom: 10ch;
+  right: 2ch;
+  position: fixed;
+  height: 6ch;
+  width: 6ch;
+  border-radius: 50px;
+  background-color: black;
+  color: aliceblue;
+}
+.findFriendIcon span{
+  font-size: 35px;
+  margin-top: 8px;
+}
