@@ -22,7 +22,7 @@ useEffect(()=>{
       <div className="container small-container">
         <Row>
           <Col>
-            <h1 className="heading">Chat App</h1>
+            <h1 className="heading">Chat Notebook</h1>
           </Col>
         </Row>
         <Row style={{ marginTop: "60px" }}>

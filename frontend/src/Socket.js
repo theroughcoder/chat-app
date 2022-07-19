@@ -3,7 +3,7 @@
 // import { createContext } from "react";
 import socketIO from "socket.io-client";
 
-const ENDPOINT = "http://192.168.1.36:5000";
+const ENDPOINT = "http://chatnotebook.herokuapp.com/";
 
 // export const Sk= createContext();
 
