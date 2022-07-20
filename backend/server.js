@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-app.use("/api/users", userRouter);
+app.use("/api/users", userRouter); 
 app.use("/api/chats", chatRouter);
 
 const _dirname = path.resolve();
@@ -32,7 +32,7 @@ app.use((err, req, res, next) => {
 
 // const httpServer = http.Server(app);
 const server = createServer(app);
-const io = new Server(server); 
+const io = new Server(server);       
 
 const users = [];
 
@@ -70,29 +70,19 @@ io.on("connection", (socket) => {
   //  socket.on('openChat', (id)=>{
   //     const user = users.filter((x)=> x._id === id);
   //     io.to(user.socketId).emit('chats', user.message);
-  //  })
+  //  }) 
  
    socket.on('message', ({messageBody, id})=>{
  
-     const me = users.find((x)=> x.socketId === socket.id);
-     if(me.message[id]){
-      me.message[id].push(messageBody);
-     }else{
-      me.message = {[id]: [messageBody]};
-     } 
-       
-
      const user = users.find((x)=> x._id === id);
-     if(user.message[id]){
-      user.message[id].push(messageBody);
-     }else{
-      user.message = {[id]: [messageBody]};
-     }
    
-      io.to(user.socketId).emit('sendMessage', messageBody)
-   })
-});   
+   if(user){
 
+     io.to(user.socketId).emit('sendMessage', messageBody) 
+   }
+   })  
+});     
+  
 const port = process.env.PORT || 5000;
 
 server.listen(port, () => {

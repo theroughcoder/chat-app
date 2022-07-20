@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
-// import Row from "react-bootstrap/Row";
-// import Col from "react-bootstrap/Col";
-// import Button from "react-bootstrap/Button";
+
 import Container from "react-bootstrap/Container";
 import Friend from "../components/Friend";
 import { Store } from "../Store";
@@ -10,9 +8,9 @@ import axios from "axios";
 import { getError } from "../utils";
 import MessageBox from "../components/MessageBox";
 import LoadingBox from "../components/LoadingBox";
-// import { Sk } from "../Socket";
 import { Socket } from "../Socket";
 import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
+import { Helmet } from "react-helmet-async";
 
 const socket = Socket();
 
@@ -20,7 +18,6 @@ export default function ListScreen() {
   const [friend, setFriend] = useState('');
   const navigate = useNavigate();
   const { state} = useContext(Store);
-  // const  socket  = useContext(Sk);
   
   const { userInfo } = state;
 
@@ -42,23 +39,9 @@ export default function ListScreen() {
     loading: false,
     error: "",
   });
-  // const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   dispatch({ type: "FETCH_REQUEST" });
-    //   try {
-    //     const result = await axios.get("/api/users", {
-    //       headers: { Authorization: `Bearer ${userInfo.token}` },
-    //     });
-    //     dispatch({ type: "FETCH_SUCCESS", payload: result.data });
-    //   } catch (err) {
-    //     dispatch({ type: "FETCH_FAIL", payload: getError(err) });
-    //   }
-
-    //   // setProducts(result.data);
-    // };
-    // fetchData();
+   
      
 
       socket.emit("onLogin", {
@@ -84,6 +67,9 @@ export default function ListScreen() {
 
   return (
     <div className="listScreen">
+     <Helmet>
+        <title>Find Friend</title>
+      </Helmet>
       <header className="list-header">
       <Form onSubmit={findFriendHandle} style={{marginTop: "15px"}} className='d-flex me-auto small-container container'>
         <InputGroup>

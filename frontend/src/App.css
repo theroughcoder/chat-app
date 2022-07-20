@@ -85,7 +85,16 @@
   /* width: 100px; */
 
 }
+.dp-header{
+  margin-left: 4vw;
+  margin-top: 8px;
+  height: 5ch;
+  width: 5ch;
+ border-radius: 100px;
+  border: 1px solid  ;
+}
 .dp{
+  /* margin-left: 1vw; */
   margin-top: 8px;
   height: 5ch;
   width: 5ch;

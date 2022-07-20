@@ -1,10 +1,10 @@
 // import { useEffect, useReducer, useState } from "react";
 
-// import { createContext } from "react";
+// import { createContext } from "react"; 
 import socketIO from "socket.io-client";
 
-const ENDPOINT = "http://chatnotebook.herokuapp.com/";
-
+const ENDPOINT = "http://192.168.1.36:5000";
+ 
 // export const Sk= createContext();
 
 // export function SocketProvider(props) {

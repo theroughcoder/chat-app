@@ -13,6 +13,8 @@ import Message from "../components/Message";
 import { Socket } from "../Socket";
 import { InputGroup } from "react-bootstrap";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { getError } from "../utils";
 
 const socket = Socket();
 
@@ -23,45 +25,13 @@ export default function ChatScreen() {
   const [messages, setMessages] = useState([]);
   const { id, name } = useParams();
   const { state } = useContext(Store);
-  // const socket = useContext(Sk);
   const { userInfo } = state;
 
-  // const reducer = (state, action) => {
-  //   switch (action.type) {
-  //     case "FETCH_REQUEST":
-  //       return { ...state, loading: true };
-  //     case "FETCH_SUCCESS":
-  //       return { ...state, friend: action.payload, loading: false };
-  //     case "FETCH_FAIL":
-  //       return { ...state, loading: false, error: action.payload };
-  //     default:
-  //       return state;
-  //   }
-  // };
 
-  // const [{ loading, error, friend }, dispatch] = useReducer(reducer, {
-  //   friend: {},
-  //   loading: true,
-  //   error: "",
-  // });
 
 useEffect(() => {
 
 
-
-    // const fetchData = async () => {
-    //   dispatch({ type: "FETCH_REQUEST" });
-    //   try {
-    //     const result = await axios.get("/api/users", {
-    //       headers: { Authorization: `Bearer ${userInfo.token}` },
-    //     });
-    //     dispatch({ type: "FETCH_SUCCESS", payload: result.data });
-    //   } catch (err) {
-    //     dispatch({ type: "FETCH_FAIL", payload: getError(err) });
-    //   }
-
-    // };
-    // fetchData();
     const fetchData = async () => {
 
         const {data} = await axios.get(`/api/users/friend/${userInfo._id}/${id}`, {
@@ -97,9 +67,7 @@ useEffect(() => {
     });
   
 
-    // socket.on("chats", (messages) => {
-    //   setMessages(messages);
-    // });
+   
     socket.on("sendMessage", (data) => {
       setMessages([...messages, data]);
     });
@@ -112,7 +80,7 @@ useEffect(() => {
     e.preventDefault();
   
     if(messages.length === 0){
-
+try{ 
       const chat = await axios.post(`/api/chats`,{
         msg: message, name: userInfo.name
       }, {
@@ -133,7 +101,11 @@ useEffect(() => {
       }, {
         headers: { Authorization: `Bearer ${userInfo.token}` },
       } );
+    }catch(err){
+      toast.error(getError(err))
+  }
     }else{
+      try{
        await axios.put(`/api/chats/${chatId}`,{
         msg: message, name: userInfo.name
       }, {
@@ -147,6 +119,9 @@ useEffect(() => {
        await axios.get(`/api/users/${id}/${userInfo._id}`, {
         headers: { Authorization: `Bearer ${userInfo.token}` },
       } );
+    }catch(err){
+      toast.error(getError(err))
+  }
 
     }
 
@@ -168,7 +143,7 @@ useEffect(() => {
           {" "}
           <Container className="user d-flex">
             <div className="friend-info me-auto d-flex ">
-              <div className="dp"></div>
+              <div className="dp-header"></div>
               <p className="name">{name}</p>
             </div>
 
@@ -214,6 +189,7 @@ useEffect(() => {
             placeholder="Message..."
             className="me-2"
             aria-label="Search"
+            required
           />
           <Button type="submit" variant="outline-light">
             Send

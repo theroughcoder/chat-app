@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import { Store } from "../Store";
+import { Helmet } from "react-helmet-async";
 
 export default function HomeScreen() {
   const {state} = useContext(Store);
@@ -19,6 +20,9 @@ useEffect(()=>{
 
   return (
     <div className="homeScreen">
+     <Helmet>
+        <title>Home</title>
+      </Helmet>
       <div className="container small-container">
         <Row>
           <Col>

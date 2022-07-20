@@ -29,7 +29,7 @@ function App() {
               <Route path="/profile" element={<Auth> <ProfileScreen /></Auth>} />;
               <Route path="/signin" element={ <SigninScreen />} />;
               <Route path="/signup" element={ <SignupScreen />} />;
-              <Route path="/findfriend" element={ <FindFriendScreen/>} />;
+              <Route path="/findfriend" element={ <Auth><FindFriendScreen/></Auth>} />;
             </Routes>
           </Container>
         </main>
