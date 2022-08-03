@@ -22,34 +22,26 @@ export default function ChatScreen() {
   const messageRef = useRef();
   const [message, setMessage] = useState("");
   const [chatId, setChatId] = useState();
+  const [msgInput, setMsgInput] = useState("");
   const [messages, setMessages] = useState([]);
   const { id, name } = useParams();
   const { state } = useContext(Store);
   const { userInfo } = state;
 
-
-
-useEffect(() => {
-
-
+  useEffect(() => {
     const fetchData = async () => {
 
-        const {data} = await axios.get(`/api/users/friend/${userInfo._id}/${id}`, {
+        const chat = await axios.get(`/api/chats/${userInfo._id}/${id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
-        }); 
-        setChatId(data.chat_id);
-        if(data){
-          const chat = await axios.get(`/api/chats/${data.chat_id}`, {
-            headers: { Authorization: `Bearer ${userInfo.token}` },
-          });
-          setMessages([ ...chat.data])
-          
+        });
+        if(chat.data){
+          setMessages([...chat.data.chats]);
+          setChatId(chat.data._id)
         }
-
-    };
+      }
+    
     fetchData();
-
-},[userInfo, id]);
+  }, [userInfo, id]);
 
   useEffect(() => {
     if (messageRef.current) {
@@ -65,9 +57,10 @@ useEffect(() => {
       name: userInfo.name,
       isAdmin: userInfo.isAdmin,
     });
-  
 
-   
+    socket.on("chats", (messages) => {
+      setMessages(messages);
+    });
     socket.on("sendMessage", (data) => {
       setMessages([...messages, data]);
     });
@@ -76,53 +69,57 @@ useEffect(() => {
     };
   }, [messages, userInfo]);
 
-  const sendHandler = async(e) => {
+  const inputHandler = async (e) => {
     e.preventDefault();
-  
-    if(messages.length === 0){
-try{ 
-      const chat = await axios.post(`/api/chats`,{
-        msg: message, name: userInfo.name
-      }, {
-        headers: { Authorization: `Bearer ${userInfo.token}` },
-      } );
+    setMsgInput("");
+    setMessages([...messages, { msg: msgInput, name: userInfo.name }]);
+  };
+  const scrollHandler = async () => {
+    const time = () => {
+      messageRef.current.scrollIntoView(false);
+    };
+    setTimeout(time, 300);
+  };
 
-       await axios.put(`/api/users/${userInfo._id}`,{
-        friend_id: id,
-        chat_id: chat.data._id,
-        name: name,
-      } ,{
-        headers: { Authorization: `Bearer ${userInfo.token}` },
-      } ); 
-       await axios.put(`/api/users/${id}`,{
-        friend_id: userInfo._id,
-        chat_id: chat.data._id,
-        name: userInfo.name
-      }, {
-        headers: { Authorization: `Bearer ${userInfo.token}` },
-      } );
-    }catch(err){
-      toast.error(getError(err))
-  }
-    }else{
-      try{
-       await axios.put(`/api/chats/${chatId}`,{
-        msg: message, name: userInfo.name
-      }, {
-        headers: { Authorization: `Bearer ${userInfo.token}` },
-      } );
+  const sendHandler = async (e) => {
+    e.preventDefault();
 
-      await axios.get(`/api/users/${userInfo._id}/${id}` ,{
-        headers: { Authorization: `Bearer ${userInfo.token}` },
-      } ); 
+    if (messages.length === 0) {
+      try {
+       await axios.post(
+          `/api/chats`,
+          {
+            firstChatId: userInfo._id,
+            secondChatId: id,
+            friendName: name,
+            msg: message,
+            name: userInfo.name,
+          },
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+ 
+      } catch (err) {
+        toast.error(getError(err));
+      }
+    } else {
+      try {
+        await axios.put(
+          `/api/chats`,
+          {
+            chatId: chatId,
+            msg: message,
+            name: userInfo.name,
+          },
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
 
-       await axios.get(`/api/users/${id}/${userInfo._id}`, {
-        headers: { Authorization: `Bearer ${userInfo.token}` },
-      } );
-    }catch(err){
-      toast.error(getError(err))
-  }
-
+      } catch (err) {
+        toast.error(getError(err));
+      }
     }
 
     setMessage("");
@@ -130,11 +127,10 @@ try{
       messageBody: { msg: message, name: userInfo.name },
       id,
     });
-    setMessages([...messages, { msg: message, name: userInfo.name }]);
   };
 
   return (
-    <div className="listScreen">
+    <div className="chatScreen">
       <Helmet>
         <title>Chat</title>
       </Helmet>
@@ -147,15 +143,12 @@ try{
               <p className="name">{name}</p>
             </div>
 
-            <div>
-              <div className="status"></div>
-            </div>
+             
           </Container>
         </Nav>
       </header>
       <Container
-        
-        style={{ marginTop: "8ch" }}
+       
         className="chat-container small-container"
       >
         <div ref={messageRef}>
@@ -166,7 +159,7 @@ try{
                   {x.msg}
                 </Message>
               );
-            } else {
+            } else if (x.name === name) {
               return (
                 <Message key={index} cls={"msg-left"}>
                   {x.msg}
@@ -176,26 +169,35 @@ try{
           })}
         </div>
       </Container>
-      <footer className="list-footer ">
-        <Form onSubmit={sendHandler} className="d-flex small-container ">
-        <InputGroup>
+        <div style={{height: '7.5ch'}}>
 
+        </div>
+      
+      <footer className="chat-footer  ">
+      
+        <Form
+          onSubmit={(e) => {
+            sendHandler(e);
+            inputHandler(e);
+          }}
+          className="d-flex small-container container "
+        >
           <FormControl
-            value={message}
+            value={msgInput}
+            onClick={scrollHandler}
             onChange={(e) => {
               setMessage(e.target.value);
+              setMsgInput(e.target.value);
             }}
-            type="search"
+            type="text"
             placeholder="Message..."
-            className="me-2"
+            className="me-2 chat-input"
             aria-label="Search"
             required
           />
-          <Button type="submit" variant="outline-light">
-            Send
+          <Button type="submit" className="chat-sendbtn" variant="dark">
+            <span class="material-symbols-outlined">send</span>
           </Button>
-        </InputGroup>
-
         </Form>
       </footer>
     </div>

@@ -21,7 +21,7 @@ function App() {
       <ToastContainer position="bottom-center" limit={1} />
 
         <main>
-          <Container className="mt-4">
+          <div>
             <Routes>
               <Route path="/" element={<HomeScreen />} />;
               <Route path="/list" element={<Auth><ListScreen /></Auth>} />;
@@ -31,7 +31,7 @@ function App() {
               <Route path="/signup" element={ <SignupScreen />} />;
               <Route path="/findfriend" element={ <Auth><FindFriendScreen/></Auth>} />;
             </Routes>
-          </Container>
+          </div>
         </main>
       </div>
     </BrowserRouter>

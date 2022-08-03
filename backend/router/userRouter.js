@@ -15,15 +15,7 @@ router.get(
     res.send(users);
   })
 );
-router.get(
-  "/friend/:id",
-  isAuth,
-  expressAsyncHandler(async (req, res) => {
-    const users = await User.findById(req.params.id);
 
-    res.send(users.friends);
-  })
-);
 router.get(
   "/search",
   isAuth,
@@ -123,49 +115,6 @@ router.put(
         message: "Password and confirm password didn" + "'" + "t match",
       });
   })
-);
-router.get(
-  "/friend/:id/:fid",
-  isAuth,
-  expressAsyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id);
-    const friend = user.friends.find((x) => x.friend_id == req.params.fid);
-
-    res.send(friend);
-  })
-);
-router.put(
-  "/:id",
-  isAuth,
-  expressAsyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id);
-
-    user.friends.unshift({
-      friend_id: req.body.friend_id,
-      chat_id: req.body.chat_id,
-      name: req.body.name,
-      lastUpdate : new Date().getTime()
-    });
-    await user.save();
-    res.send({ message: "Friend added" });
-  })
-);
-router.get(
-  "/:id/:fid",
-  isAuth,
-  expressAsyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id);
-
-    const position = user.friends.findIndex(
-      (friend) => friend.friend_id == req.params.fid
-    );
-   
-     user.friends[position].lastUpdate = new Date().getTime();
-
-
-    await user.save();
-    res.send({ message: "friend updated" });
-  })
-);
+)
 
 export default router;

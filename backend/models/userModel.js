@@ -20,15 +20,8 @@ const userSchema = mongoose.Schema({
         type : Boolean,
         default: false,
         required : true,
-    },
-    friends:[ 
-        {
-           friend_id: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-           chat_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Chat', required: true},
-           name: {type: String, required: true},
-           lastUpdate : {type : Number, required: true}
-        }  
-    ],
+    }
+    
 },{
     timestamps: true
 })

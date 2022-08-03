@@ -6,11 +6,30 @@ import { isAuth } from "../utils.js";
 
 const router = express.Router();
 
+
+router.get(
+  "/friends/:id",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const friends = await Chat.find({ $or: [ { 'firstChat.id' : req.params.id }, { 'secondChat.id': req.params.id } ] }).sort({updatedAt: -1});
+
+    res.send(friends);
+  })
+);
+
 router.post(
   "/",
   isAuth,
   expressAsyncHandler(async (req, res) => {
     const chatBody = {
+      firstChat: {
+        id : req.body.firstChatId,
+        name: req.body.name
+      },
+      secondChat: {
+        id : req.body.secondChatId,
+        name: req.body.friendName
+      },
       chats: [
         {
           msg: req.body.msg,
@@ -25,21 +44,27 @@ router.post(
   })
 );
 router.put(
-  "/:id",
+  "/",
   isAuth,
   expressAsyncHandler(async (req, res) => {
-    const userChats = await Chat.findById(req.params.id);
+    const userChats = await Chat.findById(req.body.chatId);
     userChats.chats.push({ msg: req.body.msg, name: req.body.name });
     userChats.save();
     res.send({message: "chat added"});
+
   })
 ); 
 router.get(
-  "/:id",
+  "/:id/:fid",
   isAuth,
   expressAsyncHandler(async (req, res) => {
-    const userChats = await Chat.findById(req.params.id);
-    res.send(userChats.chats);
+    const userChats = await Chat.findOne({
+      'firstChat.id': { $in: [req.params.id, req.params.fid]},
+      'secondChat.id': { $in: [req.params.id, req.params.fid]} 
+    })
+      
+
+    res.send(userChats);
   })
 );
 export default router;

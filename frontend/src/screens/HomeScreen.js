@@ -19,11 +19,11 @@ useEffect(()=>{
 
 
   return (
-    <div className="homeScreen">
+    <div className="homeScreen ">
      <Helmet>
         <title>Home</title>
       </Helmet>
-      <div className="container small-container">
+      <div className="container home-container small-container">
         <Row>
           <Col>
             <h1 className="heading">Chat Notebook</h1>
@@ -37,7 +37,7 @@ useEffect(()=>{
                 navigate("/signin");
               }}
               className="home-btn"
-              variant="light"
+              variant="outline-light"
             >
               Sign In
             </Button>{" "}
@@ -50,7 +50,7 @@ useEffect(()=>{
                 navigate("/signup");
               }}
               className="home-btn"
-              variant="dark"
+              variant="light"
             >
               Sign Up
             </Button>

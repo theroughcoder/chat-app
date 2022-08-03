@@ -1,114 +1,157 @@
 .App {
   text-align: center;
+color: aliceblue;
 }
-.small-container{
+.small-container {
   max-width: 600px;
 }
 .homeScreen {
-/* height: 94vh; */
+  /* background-image: url(../public/images/blackPatternBackground.jpg); */
   /* border: 1px solid; */
 }
 .heading {
-  color: rgb(18, 18, 18);
+  color: rgb(238, 230, 230);
   margin-top: 150px;
   font-size: 50px;
   /* font-family: 'Barlow Semi Condensed', sans-serif; */
   /* font-family: 'Courgette', cursive; */
-  font-family: 'Parisienne', cursive;
+  font-family: "Parisienne", cursive;
 }
-.home-btn{
+.home-btn {
   min-width: 250px;
-  height:3.2em ;
+  height: 3.2em;
   font-size: 1.2em;
   font-weight: 400;
   margin: 2ch;
-   font-family: 'Barlow Semi Condensed', sans-serif;
+  font-family: "Barlow Semi Condensed", sans-serif;
 }
-.list-header{
+
+.chatScreen {
+  border: 1px solid rgb(128, 0, 0);
+  background-image: url(../public/images/chatAppScreen.jpg);
+  
+
+}
+
+.list-header {
   height: 8ch;
   width: 100vw;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.497);
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1;
-  
 }
-.list-footer{
-  height: 6.5ch;
+
+.chat-container {
+  margin-top: 8ch;
+  padding: 1ch;
+  height: calc(100vh - 15.5ch);
+  /* border: 2px solid green; */
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+}
+.chat-container::-webkit-scrollbar {
+  display: none;
+}
+
+.chat-footer {
+  height: 7.5ch;
   width: 100vw;
-  background-color: black;
   position: fixed;
   bottom: 0;
   left: 0;
   z-index: 1;
- padding: 10px;
+  padding: 10px;
+  background-color: hsla(0, 0%, 0%, 0);
 }
-.list-footer Form{
+
+.chat-input {
+  border-radius: 10ch;
+  height: 5ch;
+  background-color: rgba(101, 103, 103, 0.479);
+  border: 1px solid rgba(7, 7, 7, 0.539);
+  color: rgb(243, 246, 247, 0.916);
+}
+.chat-input:focus {
+  color: rgba(243, 246, 247, 0.916);
+  border-radius: 10ch;
+  background-color: rgba(101, 103, 103, 0.479);
+  border: 1px solid rgba(7, 7, 7, 0.539);
+ 
+}
+.chat-sendbtn {
+  border-radius: 58px;
+  /* padding-top: 10px; */
+}
+.chat-sendbtn span {
+  font-size: 2.4ch;
+  margin-top: 5px;
+}
+.list-footer Form {
   margin: auto;
 }
 
-
-.user{
+.user {
   color: aliceblue;
   height: 6ch;
   border-radius: 1ch;
   margin: 1ch;
-}
-.name{
-  margin-left: 10px;
-  margin-top: 6px;
-  font-size: 15px;
   /* border: 2px solid; */
+}
+.name {
+  margin-left: 10px;
+  margin-top: 12px;
+  font-size: 20px;
+  /* border: 2px solid; */
+  /* min-width: 100px; */
   /* width: 100px; */
-
 }
-.friend-info{
-  width: 30ch;
-    /* border: 2px solid; */
-
+.friend-info {
+  width: 80%;
+  overflow: hidden;
+  /* border: 2px solid; */
 }
-.friend{
+.friend {
+  width: 100%;
   height: 7ch;
-  background-color: rgb(255, 255, 255);
-  border: 1px solid rgb(179, 175, 175);
+  /* background-color: rgba(255, 255, 255, 0.531); */
+  border-bottom: 1.5px solid rgba(255, 253, 253, 0.196);
   border-radius: 1ch;
   margin: 1ch 0;
 }
-.friend-name{
-  margin-left: 10px;
+.friend-name {
+  margin-left: 12px;
   margin-top: 6px;
   font-size: 18px;
-  color: rgb(132, 130, 127);
+  color: rgb(231, 221, 221);
 
   /* border: 2px solid; */
   /* width: 100px; */
-
 }
-.dp-header{
+.dp-header {
   margin-left: 4vw;
   margin-top: 8px;
   height: 5ch;
   width: 5ch;
- border-radius: 100px;
-  border: 1px solid  ;
+  border-radius: 100px;
+  border: 1px solid;
 }
-.dp{
+.dp {
   /* margin-left: 1vw; */
   margin-top: 8px;
   height: 5ch;
   width: 5ch;
- border-radius: 100px;
-  border: 1px solid  ;
+  border-radius: 100px;
+  border: 1px solid;
 }
 
-.profile{
+.profile {
   font-size: 35px;
   margin-top: 10px;
   margin-right: 10px;
 }
-.status{
-  
+.status {
   margin-top: 20px;
   height: 1.2ch;
   width: 1.2ch;
@@ -116,51 +159,53 @@
   /* border: .5px solid  ; */
   background-color: rgb(244, 10, 10);
 }
-.profile-img{
+.profile-img {
   margin-top: 3px;
   height: 30ch;
   width: 30ch;
- border-radius: 150px;
- margin:auto;
-  border: 2px solid ;
-  background-color: rgb(185, 227, 228);
-} 
-.chat-container{
-  padding: 1ch;
-height: calc(100vh - 14.5ch);
-/* border: 2px solid green; */
-  overflow: auto;
-  scrollbar-width: none;  /* Firefox */
+  border-radius: 150px;
+  margin: auto;
+  border: 2px solid;
+  background-color: rgb(204, 211, 211);
 }
-.chat-container::-webkit-scrollbar {
+
+.list-container {
+  margin-top: 10ch;
+  padding: 1ch;
+  height: calc(100vh - 10ch);
+  /* border: 2px solid green; */
+  overflow: auto;
+  scrollbar-width: none;
+}
+.list-container::-webkit-scrollbar {
   display: none;
 }
 
-.msg-write{
+.msg-write {
   margin-top: 10px;
 }
-.msg{
+.msg {
   text-align: left;
   font-size: 1;
   margin-bottom: 10px;
   /* border: 2px solid; */
   overflow: auto;
 }
-.msg-right{
+.msg-right {
   float: right;
   padding: 5px 10px;
   border-radius: 10px;
   background-color: black;
   color: azure;
-  
 }
-.msg-left{
+.msg-left {
+  color:rgba(0, 0, 0, 0.931);
   float: left;
   padding: 5px 10px;
   border-radius: 10px;
-  background-color: azure;
+  background-color: rgb(252, 252, 252);
 }
-.findFriendIcon{
+.findFriendIcon {
   bottom: 10ch;
   right: 2ch;
   position: fixed;
@@ -170,7 +215,23 @@ height: calc(100vh - 14.5ch);
   background-color: black;
   color: aliceblue;
 }
-.findFriendIcon span{
+.findFriendIcon span {
   font-size: 35px;
   margin-top: 8px;
+}
+/* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+ 
+  .chat-container {
+    height: calc(100vh - 21.5ch);
+    /* border: 2px solid green; */
+  }
+  .chatScreen{
+    background-size: cover;
+    
+  }
+  
+  .list-container {
+    height: calc(100vh - 16ch);
+  }
 }

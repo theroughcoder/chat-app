@@ -85,7 +85,7 @@ export default function ListScreen() {
         </InputGroup>
     </Form>
       </header>
-      <Container style={{ marginTop: "100px" }} className=" small-container">
+      <Container className=" small-container list-container">
         {(friends.length === 0)? 
           <MessageBox variant="dark">Find Friend</MessageBox>:
 
@@ -98,7 +98,7 @@ export default function ListScreen() {
         ) : (
           friends
             .filter((friend) => friend._id !== userInfo._id)
-            .map((friend, index) => <div key={index} onClick={()=>{navigate(`/chat/${friend._id}/${friend.name}`)}}><Friend friend={friend}  /></div> )
+            .map((friend, index) => <div key={index} onClick={()=>{navigate(`/chat/${friend._id}/${friend.name}`)}}><Friend name={friend.name}  /></div> )
         )}
       </Container>
     </div> 

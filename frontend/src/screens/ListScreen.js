@@ -11,11 +11,10 @@ import MessageBox from "../components/MessageBox";
 import LoadingBox from "../components/LoadingBox";
 import { Socket } from "../Socket";
 import { Helmet } from "react-helmet-async";
-
 const socket = Socket();
 
 export default function ListScreen() {
-  const [messages, setMessages] = useState(); 
+  const [messages, setMessages] = useState();
   const navigate = useNavigate();
   const { state } = useContext(Store);
 
@@ -40,29 +39,29 @@ export default function ListScreen() {
     error: "",
   });
 
-  useEffect(() => { 
+  useEffect(() => {
     const fetchData = async () => {
       dispatch({ type: "FETCH_REQUEST" });
       try {
-        const result = await axios.get(`/api/users/friend/${userInfo._id}`, {
+        const result = await axios.get(`/api/chats/friends/${userInfo._id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        result.data.sort(function(b, a){return a.lastUpdate - b.lastUpdate});
+        // result.data.sort(function (b, a) {
+        //   return a.lastUpdate - b.lastUpdate;
+        // });
 
         dispatch({ type: "FETCH_SUCCESS", payload: result.data });
       } catch (err) {
         dispatch({ type: "FETCH_FAIL", payload: getError(err) });
       }
- 
     };
     fetchData();
 
- 
     socket.on("connect", () => {
       console.log("frontend is connected with the backend");
-    }); 
+    });
     socket.on("sendMessage", (data) => {
-      setMessages([ data]);
+      setMessages([data]);
     });
 
     socket.emit("onLogin", {
@@ -72,11 +71,9 @@ export default function ListScreen() {
     });
   }, [userInfo, messages]);
 
-
-
   return (
     <div className="listScreen">
-    <Helmet>
+      <Helmet>
         <title>Friends list</title>
       </Helmet>
       <header className="list-header">
@@ -104,7 +101,7 @@ export default function ListScreen() {
           </Container>
         </Nav>
       </header>
-      <Container style={{ marginTop: "100px" }} className=" small-container">
+      <Container className="list-container small-container">
         {loading ? (
           <div className="loading">
             <LoadingBox />
@@ -118,19 +115,24 @@ export default function ListScreen() {
               <div
                 key={index}
                 onClick={() => {
-                  navigate(`/chat/${friend.friend_id}/${friend.name}`);
+                  navigate(`/chat/${friend.firstChat.id === userInfo._id? friend.secondChat.id : friend.firstChat.id}/${friend.firstChat.id === userInfo._id? friend.secondChat.name : friend.firstChat.name}`);
                 }}
               >
-                <Friend friend={friend} />
+                <Friend name={friend.firstChat.id == userInfo._id ? friend.secondChat.name : friend.firstChat.name} />
               </div>
             ))
         )}
       </Container>
       <div className="findFriendIcon">
-        <span type="button"
-                  onClick={() => {
-                    navigate("/findfriend");
-                  }} class="material-symbols-outlined">person_add</span>
+        <span
+          type="button"
+          onClick={() => {
+            navigate("/findfriend");
+          }}
+          className="material-symbols-outlined"
+        >
+          person_add
+        </span>
       </div>
     </div>
   );

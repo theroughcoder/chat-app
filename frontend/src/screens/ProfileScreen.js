@@ -81,7 +81,7 @@ const submitHandler = async (e) => {
       <Helmet>
         <title>Profile</title>
       </Helmet>
-      <div className="sign-out d-flex flex-row-reverse bd-highlight">
+      <div style={{padding: '2ch'}} className="sign-out d-flex flex-row-reverse bd-highlight">
         <Button  onClick={signOutHandler} className="" variant="dark">
           Sign out
         </Button>

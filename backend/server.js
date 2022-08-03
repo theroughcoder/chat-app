@@ -80,8 +80,8 @@ io.on("connection", (socket) => {
 
      io.to(user.socketId).emit('sendMessage', messageBody) 
    }
-   })  
-});     
+   })   
+});        
   
 const port = process.env.PORT || 5000;
 
