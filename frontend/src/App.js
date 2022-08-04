@@ -1,5 +1,4 @@
 import "./App.css";
-import Container from "react-bootstrap/Container";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import HomeScreen from "./screens/HomeScreen";

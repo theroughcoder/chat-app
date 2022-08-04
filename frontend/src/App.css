@@ -1,6 +1,10 @@
 .App {
   text-align: center;
 color: aliceblue;
+background-image: url(../public/images/blackPatternBackground.jpg);
+border: 1px solid black;
+
+height : 100vh;
 }
 .small-container {
   max-width: 600px;
@@ -27,7 +31,7 @@ color: aliceblue;
 }
 
 .chatScreen {
-  border: 1px solid rgb(128, 0, 0);
+  border: 1px solid rgb(25, 24, 24);
   background-image: url(../public/images/chatAppScreen.jpg);
   
 
@@ -221,7 +225,10 @@ color: aliceblue;
 }
 /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
- 
+ .App{
+
+   height: calc(100vh - 6ch);
+ }
   .chat-container {
     height: calc(100vh - 21.5ch);
     /* border: 2px solid green; */

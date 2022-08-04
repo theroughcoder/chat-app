@@ -86,7 +86,7 @@ export default function ChatScreen() {
 
     if (messages.length === 0) {
       try {
-       await axios.post(
+       const chat = await axios.post(
           `/api/chats`,
           {
             firstChatId: userInfo._id,
@@ -99,6 +99,7 @@ export default function ChatScreen() {
             headers: { Authorization: `Bearer ${userInfo.token}` },
           }
         );
+        setChatId(chat.data._id)
  
       } catch (err) {
         toast.error(getError(err));
@@ -196,7 +197,7 @@ export default function ChatScreen() {
             required
           />
           <Button type="submit" className="chat-sendbtn" variant="dark">
-            <span class="material-symbols-outlined">send</span>
+            <span className="material-symbols-outlined">send</span>
           </Button>
         </Form>
       </footer>
