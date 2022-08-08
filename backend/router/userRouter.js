@@ -11,7 +11,7 @@ router.get(
   "/",
 
   expressAsyncHandler(async (req, res) => {
-    const users = await User.find({});
+    const users = await User.find({}, {name: 1, _id: 1, img: 1});
     res.send(users);
   })
 );
@@ -25,11 +25,11 @@ router.get(
 
     const friendFilter = {
       name: {
-        $regex: friend,
-        $options: "i",
+        $regex: friend, 
+        $options: "i", 
       },
     };
-    const users = await User.find(friendFilter, { name: 1, email: 1, _id: 1 });
+    const users = await User.find(friendFilter, { name: 1, email: 1, _id: 1, img: 1 });
     if (users) {
       res.send(users);
     } else {
@@ -50,6 +50,7 @@ router.post(
           email: user.email,
           isAdmin: user.isAdmin,
           token: generateToken(user),
+          img: user.img
         });
         return;
       }
@@ -68,7 +69,7 @@ router.post(
         email: req.body.email,
         isAdmin: false,
         password: bcrypt.hashSync(req.body.password),
-        friends: [],
+        img: "/images/profile.jpg",
       };
       const [user] = await User.insertMany(userInfo);
 
@@ -78,6 +79,8 @@ router.post(
         email: user.email,
         isAdmin: user.isAdmin,
         token: generateToken(user),
+        img: "/images/profile.jpg",
+
       });
       return;
     }
@@ -96,6 +99,7 @@ router.put(
         email: req.body.email,
         isAdmin: false,
         password: bcrypt.hashSync(req.body.password),
+        img: req.body.img
       };
       await User.updateOne({ _id: req.user._id }, userInfo);
       const user = await User.findOne({ _id: req.user._id });
@@ -106,6 +110,7 @@ router.put(
         email: user.email,
         isAdmin: user.isAdmin,
         token: generateToken(user),
+        img: user.img
       });
       return;
     }
@@ -116,5 +121,13 @@ router.put(
       });
   })
 )
+router.get(
+  "/:id",
+
+  expressAsyncHandler(async (req, res) => {
+    const users = await User.findById(req.params.id, {name: 1, _id: 1, img: 1});
+    res.send(users);
+  })
+);
 
 export default router;

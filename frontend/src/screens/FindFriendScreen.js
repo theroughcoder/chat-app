@@ -15,10 +15,10 @@ import { Helmet } from "react-helmet-async";
 const socket = Socket();
 
 export default function ListScreen() {
-  const [friend, setFriend] = useState('');
+  const [friend, setFriend] = useState("");
   const navigate = useNavigate();
-  const { state} = useContext(Store);
-  
+  const { state } = useContext(Store);
+
   const { userInfo } = state;
 
   const reducer = (state, action) => {
@@ -41,55 +41,59 @@ export default function ListScreen() {
   });
 
   useEffect(() => {
-   
-     
-
-      socket.emit("onLogin", {
-        _id: userInfo._id,
-        name: userInfo.name,
-        isAdmin: userInfo.isAdmin,
-      });
-  
+    socket.emit("onLogin", {
+      _id: userInfo._id,
+      name: userInfo.name,
+      isAdmin: userInfo.isAdmin,
+    });
   }, [userInfo]);
 
-  const findFriendHandle = async(e)=>{
+  const findFriendHandle = async (e) => {
     e.preventDefault();
 
-    dispatch({type: 'FETCH_REQUEST'} );
-    try{
-      const {data} = await axios.get(`/api/users/search?friend=${friend}`, {headers : {Authorization: `Bearer ${userInfo.token}`}} )
-      dispatch({type: 'FETCH_SUCCESS', payload:  data});
-    }catch(err){
-      dispatch({type: 'FETCH_FAIL', payload: getError(err)});
+    dispatch({ type: "FETCH_REQUEST" });
+    try {
+      const { data } = await axios.get(`/api/users/search?friend=${friend}`, {
+        headers: { Authorization: `Bearer ${userInfo.token}` },
+      });
+      dispatch({ type: "FETCH_SUCCESS", payload: data });
+    } catch (err) {
+      dispatch({ type: "FETCH_FAIL", payload: getError(err) });
     }
-
-  }
+  };
 
   return (
     <div className="listScreen">
-     <Helmet>
+      <Helmet>
         <title>Find Friend</title>
       </Helmet>
       <header className="list-header">
-      <Form onSubmit={findFriendHandle} style={{marginTop: "15px"}} className='d-flex me-auto small-container container'>
-        <InputGroup>
-            <FormControl type="text"
-            name="q"
-            id='q'
-            onChange={(e)=>{setFriend(e.target.value)}}
-            placeholder="Find your friend..."
-            aria-label="Search Products"
-            >
-            </FormControl>
-            <Button type='submit' variant="danger outline-primary">Search</Button>
-        </InputGroup>
-    </Form>
+        <Form
+          onSubmit={findFriendHandle}
+          style={{ marginTop: "15px" }}
+          className="d-flex me-auto small-container container"
+        >
+          <InputGroup>
+            <FormControl
+              type="text"
+              name="q"
+              id="q"
+              onChange={(e) => {
+                setFriend(e.target.value);
+              }}
+              placeholder="Find your friend..."
+              aria-label="Search Products"
+            ></FormControl>
+            <Button type="submit" variant="danger outline-primary">
+              Search
+            </Button>
+          </InputGroup>
+        </Form>
       </header>
       <Container className=" small-container list-container">
-        {(friends.length === 0)? 
-          <MessageBox variant="dark">Find Friend</MessageBox>:
-
-         loading ? (
+        {friends.length === 0 ? (
+          <MessageBox variant="dark">Find Friend</MessageBox>
+        ) : loading ? (
           <div className="loading">
             <LoadingBox />
           </div>
@@ -98,9 +102,18 @@ export default function ListScreen() {
         ) : (
           friends
             .filter((friend) => friend._id !== userInfo._id)
-            .map((friend, index) => <div key={index} onClick={()=>{navigate(`/chat/${friend._id}/${friend.name}`)}}><Friend name={friend.name}  /></div> )
+            .map((friend, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  navigate(`/chat/${friend._id}`);
+                }}
+              >
+                <Friend name={friend.name} img={friend.img}/>
+              </div>
+            ))
         )}
       </Container>
-    </div> 
+    </div>
   );
 }

@@ -7,7 +7,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv"; 
 import userRouter from './router/userRouter.js'
 import chatRouter from './router/chatRouter.js'
-
+import uploadRouter from './router/uploadRouter.js'
+ 
 dotenv.config();
   
 mongoose.connect(process.env.MONGODB_URL).then(()=> {console.log("Connect to DB")}
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+app.use("/api/upload", uploadRouter);  
 app.use("/api/users", userRouter); 
 app.use("/api/chats", chatRouter);
 
@@ -43,14 +45,31 @@ io.on("connection", (socket) => {
     if(user){
       user.online = false;
       console.log('Offline', user.name);
+      io.emit('status', {online: user.online, fid : user._id} ) 
+
+    } 
+  });  
+  socket.on('logout', () => {
+    const user = users.find((x) => x.socketId === socket.id);
+    if(user){
+      console.log('Offline', user.name);
+      user.online = false;
+      io.emit('status', {online: user.online, fid : user._id} ) 
+
     } 
   }); 
+  socket.on('statusCheck', (friend)=>{
+    const user = users.find((x) => x._id === friend.friendId);
+      if(user){
+        io.emit('status', {online: user.online, fid : user._id} ) 
+      }
+  })
 
    socket.on('onLogin', (user)=>{
     const updatedUser ={
       ...user,
       online: true,
-      socketId : socket.id,
+      socketId : socket.id, 
       message: {}
     };
    
@@ -59,10 +78,13 @@ io.on("connection", (socket) => {
       existUser.socketId = socket.id;
       existUser.online = true;
       console.log('online', existUser.name)
+      socket.broadcast.emit('status', {online: existUser.online, fid : existUser._id} ) 
+
     }else{
       users.push(updatedUser);
-    
       console.log('online', updatedUser.name)
+      socket.broadcast.emit('status', {online: updatedUser.online, fid : updatedUser._id} ) 
+
     }
  
    })  

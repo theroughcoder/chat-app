@@ -11,10 +11,11 @@ import { Store } from "../Store";
 import Message from "../components/Message";
 
 import { Socket } from "../Socket";
-import { InputGroup } from "react-bootstrap";
+import { Badge, InputGroup } from "react-bootstrap";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getError } from "../utils";
+
 
 const socket = Socket();
 
@@ -22,24 +23,28 @@ export default function ChatScreen() {
   const messageRef = useRef();
   const [message, setMessage] = useState("");
   const [chatId, setChatId] = useState();
+  const [friendInfo, setFriendInfo] = useState("");
+  const [online, setOnline] = useState(false);
   const [msgInput, setMsgInput] = useState("");
   const [messages, setMessages] = useState([]);
-  const { id, name } = useParams();
+  const { id } = useParams();
   const { state } = useContext(Store);
   const { userInfo } = state;
 
   useEffect(() => {
     const fetchData = async () => {
-
-        const chat = await axios.get(`/api/chats/${userInfo._id}/${id}`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
-        if(chat.data){
-          setMessages([...chat.data.chats]);
-          setChatId(chat.data._id)
-        }
+      const friend = await axios.get(`/api/users/${id}`)
+      setFriendInfo(friend.data);
+      const chat = await axios.get(`/api/chats/${userInfo._id}/${id}`, {
+        headers: { Authorization: `Bearer ${userInfo.token}` },
+      });
+      if (chat.data) {
+        setMessages([...chat.data.chats]);
+        setChatId(chat.data._id);
       }
-    
+     
+    };
+
     fetchData();
   }, [userInfo, id]);
 
@@ -57,6 +62,14 @@ export default function ChatScreen() {
       name: userInfo.name,
       isAdmin: userInfo.isAdmin,
     });
+    socket.emit('statusCheck', {
+      friendId : id
+    })
+    socket.on('status', (data)=>{
+      if(data.fid === id){
+        setOnline(data.online)
+      }
+    })
 
     socket.on("chats", (messages) => {
       setMessages(messages);
@@ -86,12 +99,11 @@ export default function ChatScreen() {
 
     if (messages.length === 0) {
       try {
-       const chat = await axios.post(
+        const chat = await axios.post(
           `/api/chats`,
           {
             firstChatId: userInfo._id,
             secondChatId: id,
-            friendName: name,
             msg: message,
             name: userInfo.name,
           },
@@ -99,8 +111,7 @@ export default function ChatScreen() {
             headers: { Authorization: `Bearer ${userInfo.token}` },
           }
         );
-        setChatId(chat.data._id)
- 
+        setChatId(chat.data._id);
       } catch (err) {
         toast.error(getError(err));
       }
@@ -117,7 +128,6 @@ export default function ChatScreen() {
             headers: { Authorization: `Bearer ${userInfo.token}` },
           }
         );
-
       } catch (err) {
         toast.error(getError(err));
       }
@@ -128,7 +138,7 @@ export default function ChatScreen() {
       messageBody: { msg: message, name: userInfo.name },
       id,
     });
-  };
+  }; 
 
   return (
     <div className="chatScreen">
@@ -140,18 +150,18 @@ export default function ChatScreen() {
           {" "}
           <Container className="user d-flex">
             <div className="friend-info me-auto d-flex ">
-              <div className="dp-header"></div>
-              <p className="name">{name}</p>
-            </div>
-
+              <div style={{position: 'relative'}} >
+              <div className="dp-header"><img style={{width: "100%"}} src=  {friendInfo.img}  alt="ProfileImage" /></div>
+              
+                <div className={online? "status": ""}></div>
+              </div>
              
+              <p className="name">{friendInfo.name}</p>
+            </div>
           </Container>
         </Nav>
       </header>
-      <Container
-       
-        className="chat-container small-container"
-      >
+      <Container className="chat-container small-container">
         <div ref={messageRef}>
           {messages.map((x, index) => {
             if (x.name === userInfo.name) {
@@ -160,7 +170,7 @@ export default function ChatScreen() {
                   {x.msg}
                 </Message>
               );
-            } else if (x.name === name) {
+            } else if (x.name === friendInfo.name) {
               return (
                 <Message key={index} cls={"msg-left"}>
                   {x.msg}
@@ -170,12 +180,9 @@ export default function ChatScreen() {
           })}
         </div>
       </Container>
-        <div style={{height: '7.5ch'}}>
+      <div style={{ height: "7.5ch" }}></div>
 
-        </div>
-      
       <footer className="chat-footer  ">
-      
         <Form
           onSubmit={(e) => {
             sendHandler(e);
@@ -204,3 +211,4 @@ export default function ChatScreen() {
     </div>
   );
 }
+ 

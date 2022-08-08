@@ -24,11 +24,9 @@ router.post(
     const chatBody = {
       firstChat: {
         id : req.body.firstChatId,
-        name: req.body.name
       },
       secondChat: {
         id : req.body.secondChatId,
-        name: req.body.friendName
       },
       chats: [
         {

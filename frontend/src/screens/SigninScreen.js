@@ -43,7 +43,9 @@ export default function SigninScreen(){
         }
     }, [navigate, redirect, userInfo])
     return( 
-        <Container style={{marginTop: "200px"}} className="small-container">
+        <div   className="signinScreen">
+        <div  className=" container small-container" style={{marginTop: "200px"}}>
+
         <Helmet>
             <title>Sign In</title>
         </Helmet>
@@ -68,7 +70,8 @@ export default function SigninScreen(){
             </div>
 
         </Form>
+        </div>
 
-        </Container>
+        </div>
     )
 }

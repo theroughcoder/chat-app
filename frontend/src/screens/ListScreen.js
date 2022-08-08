@@ -15,6 +15,7 @@ const socket = Socket();
 
 export default function ListScreen() {
   const [messages, setMessages] = useState();
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const { state } = useContext(Store);
 
@@ -43,14 +44,35 @@ export default function ListScreen() {
     const fetchData = async () => {
       dispatch({ type: "FETCH_REQUEST" });
       try {
-        const result = await axios.get(`/api/chats/friends/${userInfo._id}`, {
+        const friendsList = await axios.get(
+          `/api/chats/friends/${userInfo._id}`,
+          {
+            headers: { Authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        const users = await axios.get(`/api/users`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
+        });
+        const updatedFriendsList = [];
+        friendsList.data.forEach((friend) => {
+          const fid =
+            friend.firstChat.id === userInfo._id
+              ? friend.secondChat.id
+              : friend.firstChat.id;
+          let friendInfo = users.data.find((user) => user._id === fid);
+          if (friendInfo) {
+            updatedFriendsList.push({
+              _id: friendInfo._id,
+              name: friendInfo.name,
+              img: friendInfo.img,
+            });
+          }
         });
         // result.data.sort(function (b, a) {
         //   return a.lastUpdate - b.lastUpdate;
         // });
 
-        dispatch({ type: "FETCH_SUCCESS", payload: result.data });
+        dispatch({ type: "FETCH_SUCCESS", payload: updatedFriendsList });
       } catch (err) {
         dispatch({ type: "FETCH_FAIL", payload: getError(err) });
       }
@@ -63,7 +85,6 @@ export default function ListScreen() {
     socket.on("sendMessage", (data) => {
       setMessages([data]);
     });
-
     socket.emit("onLogin", {
       _id: userInfo._id,
       name: userInfo.name,
@@ -81,7 +102,13 @@ export default function ListScreen() {
           {" "}
           <Container className="user container d-flex">
             <div className="friend-info me-auto d-flex ">
-              <div className="dp-header"></div>
+              <div className="dp-header">
+                <img
+                  style={{ width: "100%" }}
+                  src={userInfo ? userInfo.img : "/images/profile.jpg"}
+                  alt="ProfileImage"
+                />
+              </div>
               <p className="name">{userInfo ? userInfo.name : "no user"}</p>
             </div>
 
@@ -109,18 +136,18 @@ export default function ListScreen() {
         ) : error ? (
           <MessageBox variant="danger">{error}</MessageBox>
         ) : (
-          friends
-            .filter((friend) => friend._id !== userInfo._id)
-            .map((friend, index) => (
+          friends.map((friend, index) => {
+            return (
               <div
                 key={index}
                 onClick={() => {
-                  navigate(`/chat/${friend.firstChat.id === userInfo._id? friend.secondChat.id : friend.firstChat.id}/${friend.firstChat.id === userInfo._id? friend.secondChat.name : friend.firstChat.name}`);
+                  navigate(`/chat/${friend._id}`);
                 }}
               >
-                <Friend name={friend.firstChat.id == userInfo._id ? friend.secondChat.name : friend.firstChat.name} />
+                <Friend name={friend.name} img={friend.img} />
               </div>
-            ))
+            );
+          })
         )}
       </Container>
       <div className="findFriendIcon">

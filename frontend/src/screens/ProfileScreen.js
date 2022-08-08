@@ -8,6 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Store } from "../Store";
 import { getError } from "../utils";
+import { Socket } from "../Socket";
+const socket = Socket();
+
 
 
 const reducer = (state, action) => {
@@ -36,11 +39,16 @@ export default function ProfileScreen() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const {userInfo} = state;
   const [name, setName] = useState(userInfo.name);
-  const [email, setEmail] = useState(userInfo.email);
+  const [image, setImage] = useState(userInfo.img);
   const [password, setPassword] = useState('');
   const [cpassword, setCPassword] = useState('');
 
   useEffect(()=>{
+    socket.emit("onLogin", {
+      _id: userInfo._id,
+      name: userInfo.name,
+      isAdmin: userInfo.isAdmin,
+    }); 
 
     if(!userInfo){
       navigate('/')
@@ -49,7 +57,7 @@ export default function ProfileScreen() {
   },[userInfo])
   
   const signOutHandler = ()=>{
-
+    socket.emit("logout");
  ctxDispatch({type: "USER_SIGNOUT" })
  navigate('/')
 };
@@ -59,7 +67,7 @@ const submitHandler = async (e) => {
     dispatch({ type: 'UPDATE_REQUEST' });
     const{data} = await axios.put(
       `/api/users/profileupdate`,
-      { _id: userInfo._id, name, email, password, cpassword },
+      { _id: userInfo._id, name, email: userInfo.email, password, cpassword, img: image },
       {
         headers: { Authorization: `Bearer ${userInfo.token}` },
       }
@@ -75,9 +83,29 @@ const submitHandler = async (e) => {
     dispatch({ type: 'UPDATE_FAIL' });
   }
 };
+const uploadFileHandler = async (e, forImages) => {
+  const file = e.target.files[0];
+  const bodyFormData = new FormData();
+  bodyFormData.append('file', file);
+  try {
+    dispatch({ type: 'UPLOAD_REQUEST' });
+    const { data } = await axios.post('/api/upload', bodyFormData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        authorization: `Bearer ${userInfo.token}`,
+      },
+    });
+
+      setImage(data.secure_url);
+   
+    toast.success('Image uploaded successfully. click Update to apply it');
+  } catch (err) {
+    toast.error(getError(err));
+  }
+};
 
   return (
-    <div>
+    <div className="profile-container">
       <Helmet>
         <title>Profile</title>
       </Helmet>
@@ -87,15 +115,19 @@ const submitHandler = async (e) => {
         </Button>
       </div>
 
-      <Container style={{ marginTop: "1px" }} className=" small-container">
+      <Container style={{ marginTop: "-20px" }} className=" small-container">
         <div>
-          <div className="profile-img"></div>
+          <div className="profile-img" > <img style={{width: "100%"}} src= {image}  alt="Trull" /> </div>
         </div>
         <h1 className="my-3">{userInfo ? userInfo.name : "no user"}</h1>
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="email">
             <Form.Label>Username</Form.Label>
             <Form.Control value={name} onChange={(e)=>{setName(e.target.value)}} type="text" required></Form.Control>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="imageFile">
+            <Form.Label>Upload Image</Form.Label>
+            <Form.Control  type="file" onChange={uploadFileHandler} />
           </Form.Group>
           <Form.Group className="mb-3" controlId="password">
             <Form.Label>Password</Form.Label>

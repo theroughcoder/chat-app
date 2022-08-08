@@ -24,7 +24,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomeScreen />} />;
               <Route path="/list" element={<Auth><ListScreen /></Auth>} />;
-              <Route path="/chat/:id/:name" element={<Auth> <ChatScreen /></Auth>} />;
+              <Route path="/chat/:id" element={<Auth> <ChatScreen /></Auth>} />;
               <Route path="/profile" element={<Auth> <ProfileScreen /></Auth>} />;
               <Route path="/signin" element={ <SigninScreen />} />;
               <Route path="/signup" element={ <SignupScreen />} />;

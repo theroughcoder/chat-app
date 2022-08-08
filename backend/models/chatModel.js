@@ -3,11 +3,9 @@ import mongoose from "mongoose";
 const chatSchema = mongoose.Schema({
   firstChat: {
     id: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    name: {type: String, required: true}
   },
   secondChat: {
     id: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    name: {type: String, required: true}
   },
   chats: [
     {
