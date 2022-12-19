@@ -3,7 +3,7 @@
 ## Overview
 
 Developed a chat application. It's a MERN stack project and has been built with the help of web sockets. Axios is the frontend library used for fetching
-backend restful API. Reducer plays a crucial role for setting up a perfect coordination between fetching APIs. For storing variable globally useContext is used. The UI of the website is fully responsive desktop and mobile. This app can match the real WhatsApp, But shows some functionalities of it.
+backend restful API. Reducer plays a crucial role for setting up a perfect coordination between fetching APIs. For storing variable globally useContext is used. The UI of the website is fully responsive for desktop and mobile. This app can match the real WhatsApp, But shows some functionalities of it.
 Just made the project for fun and learning.
 
 ## Features
